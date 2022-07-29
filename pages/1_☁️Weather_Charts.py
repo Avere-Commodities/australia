@@ -20,7 +20,7 @@ def main():
     with st.sidebar:
         col11, col21 = st.columns(2)
         add_class = st.selectbox("Crop Type", ('Wheat', 'Barley', 'Canola'))
-        add_region = st.selectbox("Choose a Region", ('New South Wales', 'Western Australia','Victoria', 'South Australia','Queensland'))
+        add_region = st.selectbox("Choose a Region", ('Western Australia', 'New South Wales', 'Victoria', 'South Australia','Queensland'))
         start = col11.date_input("Start Date", min_start, min_value=min_start, max_value=max_start)
         end = col21.date_input("End Date", max_start, min_value=min_start, max_value=max_start)
 

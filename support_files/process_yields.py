@@ -36,6 +36,8 @@ def main():
     table = pd.concat(sheet_list)
     table = pd.concat([table, table_old])
     table['year'] = table['year'].str[:4].astype(int)
+    table = table.groupby(['crop', 'year', 'region'], as_index=False)['yield'].mean()
+    table = table.sort_values(by=['crop', 'year', 'region'])
     table.to_csv('australia_yields.csv', index=None)
     
 
