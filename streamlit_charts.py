@@ -15,7 +15,7 @@ class Weather_Report:
         start_date, end_date = pd.Timestamp(2020, start_date.month, start_date.day), pd.Timestamp(2020, end_date.month, end_date.day)
         
         y_df = self.country_yields
-        y_df.set_index('year', inplace=True)
+        y_df.set_index('year')
 
         x_df = self.weather[self.weather['year'].isin(y_df.index)]
         last_year = x_df['year'].max()
@@ -37,8 +37,6 @@ class Weather_Report:
             fig.add_trace(go.Scatter(x=[x_df.query('year==@last_year')['value'].values[0]], y=[0],
                                     showlegend=False, text=str(last_year), mode='markers', marker=dict(color='#FF0000', size=8)))
 
-            model = px.get_trendline_results(fig)
-            rsq = str(round(model.iloc[0]["px_fit_results"].rsquared, 3) * 100)[:4]
             title_text = f"<b>{self.region_name} Yield vs Avg {weather_variable.title().replace('-', ' ')}, YoY - From {boundary1.strftime('%b %d')} To {boundary2.strftime('%b %d')}</b>"
             fig.update_layout(
                 title=title_text, 
@@ -55,7 +53,7 @@ class Weather_Report:
         start_date, end_date = pd.Timestamp(start_date), pd.Timestamp(end_date)
         start_date, end_date = pd.Timestamp(2020, start_date.month, start_date.day), pd.Timestamp(2020, end_date.month, end_date.day)
         
-        def get_analogs(weather_variable: str, last_year: int, max_last_date):
+        def get_analogs(last_year: int, max_last_date):
             boundary = min(max_last_date, end_date)
             analogs_df = pd.concat([observed_data, ecm_data])
 
@@ -85,7 +83,7 @@ class Weather_Report:
                 if len(observed_data.query('year==@last_year')):
                     ecm_data[weather_variable] = ecm_data[weather_variable] + observed_data.query('year==@last_year')[weather_variable].max()
 
-        excl_years = get_analogs(weather_variable, last_year, max_last_date)
+        excl_years = get_analogs(last_year, max_last_date)
         print(excl_years)
         max_data = observed_data.query('year<@last_year').groupby('unified_date', as_index=False)[
             ['unified_date', 'value']].max()
