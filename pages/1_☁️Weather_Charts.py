@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 from support_files.resources import current_year, all_weather_items_pretty
 from support_files.quickstart import credentials, download_dataframe
-# from streamlit_charts import Weather_Report
+from streamlit_charts import Weather_Report
 
 st.set_page_config(page_title="Weather per Region", layout='wide')
 charts_container, models_container = st.container(), st.container()
@@ -27,16 +27,16 @@ def main():
         weather_options = st.multiselect('Parameter ', all_weather_items_pretty, ['Daily Precipitation'])
 
 
-    # subdf = df.query('variable == @weather_options & state==@add_region')
-    # subyields = yields.query('crop=="Wheat" & region==@add_region')
-
-    # region_df = Weather_Report(subdf, subyields, add_region)
     
     with charts_container:
         st.markdown("#### **Weather Charts**")
         for weather in weather_options:
             weather = weather.replace(' ','-').lower()
-            # st.plotly_chart(region_df.get_weather_chart(weather_options, start, end), use_container_width=True)
+            subdf = df.query('variable == @weather & state==@add_region')
+            subyields = yields.query('crop=="Wheat" & region==@add_region')
+            region_df = Weather_Report(subdf, subyields, add_region)
+
+            st.plotly_chart(region_df.get_weather_chart(weather_options, start, end), use_container_width=True)
             
     with models_container:
         st.markdown("#### **Regression Charts**")
