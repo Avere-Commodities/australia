@@ -1,8 +1,7 @@
 import datetime
 import pandas as pd
 import streamlit as st
-# from streamlit_charts import Weather_Report
-# from support_files.resources import current_year, today, wwht_regions, swht_regions, all_weather_items_pretty, mapping_path
+from support_files.resources import current_year
 
 
 st.set_page_config(page_title="Weather per Region", layout='wide')
@@ -21,7 +20,7 @@ def main():
         add_class = st.radio("Crop Type", ('Winter Wheat', 'Spring Wheat'))
         col11, col21 = st.columns(2)
         add_region = st.selectbox("Choose a Region", tuple(wwht_regions))
-        start = col11.date_input("Start Date", min_start_wwht, min_value=min_start_wwht, max_value=max_start_wwht)
+        start = col11.date_input("Start Date", min_start, min_value=min_start, max_value=max_start_wwht)
         end = col21.date_input("End Date", max_start_wwht, min_value=min_start_wwht, max_value=max_start_wwht)
 
         weather_options = st.multiselect('Parameter ', all_weather_items_pretty, ['Daily Precipitation'])
