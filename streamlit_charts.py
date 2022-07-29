@@ -131,7 +131,7 @@ class Weather_Report:
     
     
 def yields_history(yields_df:pd.DataFrame, state: str):
-    # yields_df = yields_df.sort_values(by='year')
+    yields_df = yields_df.groupby(['year'], as_index=False)['yield'].mean()
     fig = px.line(yields_df, x="year", y="yield", labels={'yield':'', 'year':""})
     fig.update_layout(title=f'{state} - Historical Wheat Yields', hovermode="x unified", font=dict(color='rgb(82, 82, 82)', family='Arial'),
                         xaxis=dict(gridcolor='#FFFFFF',tickformat="%b %d",
