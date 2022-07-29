@@ -2,6 +2,7 @@ import datetime
 import pandas as pd
 import streamlit as st
 from support_files.resources import current_year, all_weather_items_pretty
+from support_files.quickstart import credentials, download_dataframe
 
 
 st.set_page_config(page_title="Weather per Region", layout='wide')
@@ -10,13 +11,12 @@ charts_container, models_container = st.container(), st.container()
 min_start = datetime.date(current_year, 3, 1)
 max_start = datetime.date(current_year, 12, 31)
 
-
+creds = credentials()
 
 def main():
-    st.write('qwe')
-    # regions_list = pd.read_csv(mapping_path).query('region_1=="Russia"')['region_2'].to_list()
-    # regions_list.sort()
-    
+    df = download_dataframe(creds=creds, filename='australia_weather.csv', parse_dates=['date'])
+    yields = pd.read_csv('./support_files/australia_yields.csv')
+
     with st.sidebar:
         add_class = st.selectbox("Crop Type", ('Wheat', 'Barley', 'Canola'))
         col11, col21 = st.columns(2)
@@ -26,6 +26,16 @@ def main():
 
         weather_options = st.multiselect('Parameter ', all_weather_items_pretty, ['Daily Precipitation'])
 
-
+    with charts_container:
+        st.markdown("#### **Weather Charts**")
+        for weather in weather_options:
+            weather = weather.replace(' ','-').lower()
+            
+    with models_container:
+        st.markdown("#### **Regression Charts**")
+    for weather in weather_options:
+        weather = weather.replace(' ','-').lower()
+        
+        
 if __name__ == '__main__':
     main()
