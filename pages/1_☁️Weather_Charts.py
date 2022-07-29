@@ -13,7 +13,7 @@ max_start = datetime.date(current_year, 12, 31)
 
 
 def main():
-    # st.write('qwe')
+    st.write('qwe')
     # regions_list = pd.read_csv(mapping_path).query('region_1=="Russia"')['region_2'].to_list()
     # regions_list.sort()
     
