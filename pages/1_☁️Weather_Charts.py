@@ -18,7 +18,7 @@ def main():
     # regions_list.sort()
     
     with st.sidebar:
-        add_class = st.radio("Crop Type", ('Winter Wheat', 'Spring Wheat'))
+        add_class = st.radio("Crop Type", ('Wheat', 'Barley', 'Canola'))
         col11, col21 = st.columns(2)
         add_region = st.selectbox("Choose a Region", ('New South Wales', 'Western Australia','Victoria', 'South Australia','Queensland'))
         start = col11.date_input("Start Date", min_start, min_value=min_start, max_value=max_start)
