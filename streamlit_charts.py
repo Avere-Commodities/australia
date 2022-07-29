@@ -129,6 +129,17 @@ class Weather_Report:
 
         return fig
     
+    
+def yields_history(yields_df:pd.DataFrame, state: str):
+    yields_df = yields_df.sort_values(by='year')
+    fig = px.line(yields_df, x="year", y="yield", labels={'yield':'', 'year':""})
+    fig.update_layout(title=f'{state} - Historical Wheat Yields', hovermode="x unified", font=dict(color='rgb(82, 82, 82)', family='Arial'),
+                        xaxis=dict(gridcolor='#FFFFFF',tickformat="%b %d",
+                                    linecolor='rgb(204, 204, 204)', linewidth=1, ticks='outside',
+                                    tickfont=dict(size=12)),
+                        yaxis=dict(gridcolor='#F8F8F8', tickfont=dict(size=12)),
+                        plot_bgcolor='white')
+    return fig
 
 # if __name__ == '__main__':
 #     all_historical_estimates()
