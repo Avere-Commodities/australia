@@ -1,8 +1,8 @@
 import requests
-import datetime
 import pandas as pd
 from os import listdir
 from os.path import isfile, join
+from support_files.resources import current_year
 
 
 aus_dict = {
@@ -73,7 +73,7 @@ def create_era5():
     
    
 def main():
-    current_year = datetime.datetime.now().year
+    # current_year = datetime.datetime.now().year
     df_era5 = create_era5()
     last_date = df_era5['date'].max()+pd.DateOffset(days=1)
     df_cy = create_agriquest(last_date.strftime("%Y-%m-%d"), f'{current_year+1}-12-31')
