@@ -28,6 +28,7 @@ def main():
 
     subyields = yields.query('crop=="Wheat" & region==@add_region')
     st.markdown("#### **Historical Yield**")
+    st.write(subyields)
     st.plotly_chart(yields_history(subyields, add_region), use_container_width=True)
     
     
