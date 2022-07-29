@@ -1,17 +1,7 @@
-import joblib
-from datetime import timedelta
-import os
-from os import listdir
-from os.path import isfile, join
 import pandas as pd
-import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from combine_weather import weighted_weather
-from support_files.quickstart import credentials, download_dataframe
 pd.options.mode.chained_assignment = None
-
-creds = credentials()
 
 
 class Weather_Report:
