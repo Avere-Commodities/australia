@@ -35,13 +35,16 @@ def main():
             subdf = df.query('variable == @weather & state==@add_region')
             subyields = yields.query('crop=="Wheat" & region==@add_region')
             region_df = Weather_Report(subdf, subyields, add_region)
-
             st.plotly_chart(region_df.get_weather_chart(weather, start, end), use_container_width=True)
             
     with models_container:
         st.markdown("#### **Regression Charts**")
-    for weather in weather_options:
-        weather = weather.replace(' ','-').lower()
+        for weather in weather_options:
+            weather = weather.replace(' ','-').lower()
+            subdf = df.query('variable == @weather & state==@add_region')
+            subyields = yields.query('crop=="Wheat" & region==@add_region')
+            region_df = Weather_Report(subdf, subyields, add_region)
+            st.plotly_chart(region_df.get_weather_analytics(weather, start, end), use_container_width=True)
         
         
 if __name__ == '__main__':

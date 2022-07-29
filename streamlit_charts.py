@@ -12,42 +12,34 @@ class Weather_Report:
 
     def get_weather_analytics(self, weather_variable: str, start_date: str, end_date: str):
         start_date, end_date = pd.Timestamp(start_date), pd.Timestamp(end_date)
-        year_start = 2020
-        start_date, end_date = pd.Timestamp(year_start, start_date.month, start_date.day), pd.Timestamp(end_date.year-start_date.year+year_start, end_date.month, end_date.day)
+        start_date, end_date = pd.Timestamp(2020, start_date.month, start_date.day), pd.Timestamp(2020, end_date.month, end_date.day)
         
         y_df = self.country_yields
-        y_df.loc[y_df.index.max()+1]=y_df.loc[y_df.index.max()]
+        y_df.set_index('year', inplace=True)
 
         x_df = self.weather[self.weather['year'].isin(y_df.index)]
-        if weather_variable == 'vegetation-vigor-index':
-            x_df = x_df.dropna(subset=weather_variable)
         last_year = x_df['year'].max()
-        max_last_date = x_df.query('year==@last_year')['new_time'].max()
+        max_last_date = x_df.query('year==@last_year')['unified_date'].max()
             
         boundary1, boundary2 = min(max_last_date, start_date), min(max_last_date, end_date)
         if boundary1 != boundary2:
-            x_df = x_df.query('new_time>=@boundary1 & new_time<=@boundary2')
-            if not weather_variable in ['vegetation-vigor-index', 'soil-moisture']:
-                x_df = x_df.groupby(['year'], as_index=False)[weather_variable].mean()
-            else:
-                x_df = x_df.query('new_time==@boundary2')[['year', weather_variable]]
+            x_df = x_df.query('unified_date>=@boundary1 & unified_date<=@boundary2')
+            x_df = x_df.groupby(['year'], as_index=False)['value'].mean()
+
             x_df = x_df.merge(y_df, left_on='year', right_index=True)
-            x_df[[weather_variable, 'Value']] = x_df[[weather_variable, 'Value']].diff()
+            x_df[['value', 'yield']] = x_df[['value', 'yield']].diff()
             x_df = x_df.dropna()
  
-            fig = px.scatter(x_df.query('year<@last_year'), x=weather_variable, y='Value', text=x_df.query('year<@last_year')['year'],
+            fig = px.scatter(x_df.query('year<@last_year'), x='value', y='yield', text=x_df.query('year<@last_year')['year'],
                                 trendline="ols")
             fig.update_traces(textposition='top center', marker=dict(color='#5D69B1', size=6),
                                 textfont=dict(color='#E58606'))
-            fig.add_trace(go.Scatter(x=[x_df.query('year==@last_year')[weather_variable].values[0]], y=[0],
+            fig.add_trace(go.Scatter(x=[x_df.query('year==@last_year')['value'].values[0]], y=[0],
                                     showlegend=False, text=str(last_year), mode='markers', marker=dict(color='#FF0000', size=8)))
 
             model = px.get_trendline_results(fig)
             rsq = str(round(model.iloc[0]["px_fit_results"].rsquared, 3) * 100)[:4]
-            if not weather_variable in ['vegetation-vigor-index', 'soil-moisture']:
-                title_text = f"<b>{self.region_name} Yield vs Avg {weather_variable.title().replace('-', ' ')}, YoY - From {boundary1.strftime('%b %d')} To {boundary2.strftime('%b %d')}</b>"
-            else:
-                title_text = f"<b>{self.region_name} Yield vs {weather_variable.title().replace('-', ' ')}, YoY - As of {boundary2.strftime('%b %d')}</b>"
+            title_text = f"<b>{self.region_name} Yield vs Avg {weather_variable.title().replace('-', ' ')}, YoY - From {boundary1.strftime('%b %d')} To {boundary2.strftime('%b %d')}</b>"
             fig.update_layout(
                 title=title_text, 
                 font=dict(color='rgb(82, 82, 82)', family='Arial'),
