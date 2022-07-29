@@ -14,7 +14,7 @@ max_start = datetime.date(current_year, 12, 31)
 creds = credentials()
 
 def main():
-    df = download_dataframe(creds=creds, filename='australia_weather.csv', parse_dates=['date'])
+    df = download_dataframe(creds=creds, filename='australia_weather.csv',  parse_dates=['date', 'unified_date'])
     yields = pd.read_csv('./support_files/australia_yields.csv')
 
     with st.sidebar:
