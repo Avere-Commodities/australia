@@ -79,6 +79,8 @@ def main():
     df_cy = create_agriquest(last_date.strftime("%Y-%m-%d"), f'{current_year+1}-12-31')
     df_observed = pd.concat([df_era5, df_cy])
     df_observed = df_observed.sort_values(by=['indicator', 'date', 'state', 'variable'])
+    df_observed['unified_date'] = df_observed['date'].replace({old_date: old_date + pd.DateOffset(year=2020) for old_date in df_observed['date'].unique()})
+    df_observed['year'] = df_observed['date'].dt.year
     df_observed.to_csv(r'G:\My Drive\australia\australia_weather.csv', index=None)
  
  
