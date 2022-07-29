@@ -8,9 +8,8 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from combine_weather import weighted_weather
-from get_yield_estimate import get_forecast
 from support_files.quickstart import credentials, download_dataframe
-from support_files.resources import  get_translation, get_yields, wwht_start, swht_start
+# from support_files.resources import  get_translation, get_yields, wwht_start, swht_start
 pd.options.mode.chained_assignment = None
 
 creds = credentials()
