@@ -6,7 +6,7 @@ from support_files.quickstart import credentials, download_dataframe
 from streamlit_charts import Weather_Report, yields_history
 
 st.set_page_config(page_title="Weather per Region", layout='wide')
-charts_container, models_container, yields_container = st.container(), st.container(), st.container()
+yields_container, charts_container, models_container = st.container(), st.container(), st.container()
 
 min_start = datetime.date(current_year, 3, 1)
 max_start = datetime.date(current_year, 12, 31)
