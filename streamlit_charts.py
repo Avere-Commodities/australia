@@ -14,8 +14,8 @@ class Weather_Report:
         start_date, end_date = pd.Timestamp(start_date), pd.Timestamp(end_date)
         start_date, end_date = pd.Timestamp(2020, start_date.month, start_date.day), pd.Timestamp(2020, end_date.month, end_date.day)
         
-        y_df = self.country_yields
-        y_df.set_index('year')
+        y_df = self.country_yields.copy()
+        y_df.set_index('year', inplace=True)
 
         x_df = self.weather[self.weather['year'].isin(y_df.index)]
         last_year = x_df['year'].max()
