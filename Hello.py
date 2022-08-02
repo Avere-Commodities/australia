@@ -1,11 +1,18 @@
 import streamlit as st
+from support_files.quickstart import credentials, download_image
 
 st.set_page_config(page_title="Australia Weather Maps", layout='wide')
+creds = credentials()
 
 
 def main():   
     st.markdown(f"""#### Weather Summary""")
-
+    col1, col2 = st.columns(2)
+    tp = download_image(creds, filename='australia_tp.png')
+    t2m = download_image(creds, filename='australia_t2m.png')
+    col1.image(tp)
+    col2.image(t2m)
+    
     
 if __name__ == '__main__':
     main()
