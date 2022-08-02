@@ -2,7 +2,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 pd.options.mode.chained_assignment = None
+from support_files.quickstart import credentials, download_dataframe
 
+creds = credentials()
 
 class Weather_Report:
     def __init__(self, weather: pd.DataFrame, country_yields: pd.DataFrame, region_name: str):
@@ -138,6 +140,43 @@ def yields_history(yields_df:pd.DataFrame, state: str):
                         yaxis=dict(gridcolor='#F8F8F8', tickfont=dict(size=12)),
                         plot_bgcolor='white')
     return fig
+
+
+def deviation_charts():
+    def plot_charts(df, period: str):
+        fig = px.bar(df, color_discrete_sequence=px.colors.qualitative.Dark2,
+                labels={'variable':'', '_value':'','state':''})
+
+        fig.update_layout(title=f'Total Precip - Last {period} vs Historical Average', hovermode="x unified",
+                            font=dict(color='rgb(82, 82, 82)', family='Arial'),
+                            width=1300,height=400,
+                                xaxis=dict(gridcolor='#FFFFFF',tickformat="%b %d",
+                                            linecolor='rgb(204, 204, 204)', linewidth=1, ticks='outside',
+                                            tickfont=dict(size=12)),
+                                    yaxis=dict(gridcolor='#F8F8F8', tickfont=dict(size=12), tickformat=".1%"),
+                                    plot_bgcolor='white', showlegend=False)
+        return fig
+    
+    table = download_dataframe(creds=creds, filename='australia_weather.csv',  parse_dates=['date', 'unified_date'])
+    current_year = table['year'].max()
+    today = table['date'].max()
+    today_u = today+pd.DateOffset(year=2020)
+    last_week_u = today_u+pd.DateOffset(days=-7)
+    last_month_u = today_u+pd.DateOffset(days=-31)
+    table_m = table[table['unified_date'].isin(pd.date_range(last_month_u, today_u))]
+    table_w = table[table['unified_date'].isin(pd.date_range(last_week_u, today_u))]
+
+    subset_m = table_m.query('variable=="daily-precipitation"')
+    cy_m = subset_m.query('year==@current_year').groupby('state')['value'].sum()
+    norm_m = subset_m.query('year<@current_year').groupby(['state', 'year'], as_index=False)['value'].sum().groupby(['state'])['value'].median()
+    stats_monthly = cy_m/norm_m - 1
+
+    subset_w = table_w.query('variable=="daily-precipitation"')
+    cy_w = subset_w.query('year==@current_year').groupby('state')['value'].sum()
+    norm_w = subset_w.query('year<@current_year').groupby(['state', 'year'], as_index=False)['value'].sum().groupby(['state'])['value'].median()
+    stats_weekly = cy_w/norm_w - 1
+    return plot_charts(stats_monthly, 30), plot_charts(stats_weekly, 7)
+
 
 # if __name__ == '__main__':
 #     all_historical_estimates()

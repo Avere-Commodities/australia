@@ -1,5 +1,8 @@
+from regex import W
 import streamlit as st
 from support_files.quickstart import credentials, download_image
+from streamlit_charts import deviation_charts
+
 
 st.set_page_config(page_title="Australia Weather Maps", layout='wide')
 creds = credentials()
@@ -10,8 +13,11 @@ def main():
     col1, col2 = st.columns(2)
     tp = download_image(creds, filename='australia_tp.png')
     t2m = download_image(creds, filename='australia_t2m.png')
+    m, w = deviation_charts()
     col1.image(tp)
     col2.image(t2m)
+    col1.image(w)
+    col2.image(m)
     st.markdown(f"""#### Production by County""")
     col1, col2 = st.columns(2)
     col1.image('./support_files/production_charts/aus_wheat.jpg')
