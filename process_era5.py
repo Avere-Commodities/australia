@@ -10,13 +10,13 @@ from concurrent.futures import ProcessPoolExecutor
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-def regional_production():
+def regional_production(keyword='Wheat', threshold=15000):
     df_prod = pd.read_excel('./support_files/AGCDCASGS202021.xlsx', sheet_name='Table 1')
     df_prod.columns = df_prod.iloc[5,:]
     df_prod = df_prod.iloc[6:,:]
     df_prod[' Estimate '] = pd.to_numeric(df_prod[' Estimate '], errors='coerce')
     df_prod = df_prod.dropna(subset=['Commodity description', ' Estimate '])
-    df_prod = df_prod[df_prod['Commodity description'].str.contains('Wheat for grain - Production')]
+    df_prod = df_prod[df_prod['Commodity description'].str.contains(f'{keyword} for grain - Production')]
     df_prod = df_prod[['Region code', ' Estimate ']]
     df_prod.rename({' Estimate ':'Estimate', 'Region code':'SA2_CODE21'}, axis=1, inplace=True)
     df_prod['SA2_CODE21'] = df_prod['SA2_CODE21'].astype(str)
@@ -24,7 +24,7 @@ def regional_production():
     gpd = geopandas.read_file('./support_files/SA2_2021_AUST_SHP_GDA2020.zip')
     gpd = gpd.merge(df_prod, on='SA2_CODE21',how='left')
     gpd['Estimate'] = gpd['Estimate'].fillna(0)
-    gpd = gpd[gpd['Estimate']>15000]
+    gpd = gpd[gpd['Estimate']>threshold]
     return gpd
 
 
@@ -105,18 +105,16 @@ def process_all(date: str, suffix='australia'):
     try:
         print(date)
         reg_prod = regional_production()
-        table = pd.concat([process_hourly_vars(reg_prod, date, ['2m_temperature']), process_moisture_vars(reg_prod, date, ['total_precipitation'])])
-        table.to_csv(f'./data_era5/{date}_{suffix}.csv', index=None)
+        table = pd.concat([process_hourly_vars(reg_prod, date, ['leaf_area_index_low_vegetation']), process_moisture_vars(reg_prod, date, ['snowfall'])])
+        # table = pd.concat([process_hourly_vars(reg_prod, date, ['2m_temperature']), process_moisture_vars(reg_prod, date, ['total_precipitation'])])
+        table.to_csv(f'./data_era5/{date}_{suffix}_1.csv', index=None)
     except:
         pass
 
 
 def main():
-    with ProcessPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(process_all, date.strftime("%Y-%m-%d")) for date in pd.date_range('1980-01-01', '2012-09-10')[::-1]]
-        # [future.result() for future in futures]
-    # for date in pd.date_range('1980-01-01', '2022-07-22')[::-1]:
-    #         process_all(date.strftime("%Y-%m-%d"))
+    with ProcessPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(process_all, date.strftime("%Y-%m-%d")) for date in pd.date_range('1980-01-01', '2022-07-22')[::-1]]
 
 
 if __name__ == '__main__':

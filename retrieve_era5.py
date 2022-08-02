@@ -31,7 +31,7 @@ def retrieve_data(date, variable):
 
 
 def main():
-    for date in pd.date_range('1980-01-01', '2019-10-21')[::-1]:
+    for date in pd.date_range('1980-01-01', '1984-09-08')[::-1]:
         try:
             retrieve_data(date.strftime("%Y-%m-%d"), ['2m_temperature', 'total_precipitation', 'snowfall', 'leaf_area_index_low_vegetation'])
         except:
