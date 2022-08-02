@@ -12,7 +12,9 @@ def main():
     t2m = download_image(creds, filename='australia_t2m.png')
     col1.image(tp)
     col2.image(t2m)
-    
+    st.markdown(f"""#### Production by County""")
+    col1.image('./support_files/production_charts/aus_wheat.jpg')
+    col2.image('./support_files/production_charts/aus_barley.jpg')
     
 if __name__ == '__main__':
     main()
