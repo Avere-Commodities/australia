@@ -1,4 +1,3 @@
-from regex import W
 import streamlit as st
 from support_files.quickstart import credentials, download_image
 from streamlit_charts import deviation_charts
