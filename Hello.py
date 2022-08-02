@@ -13,6 +13,7 @@ def main():
     col1.image(tp)
     col2.image(t2m)
     st.markdown(f"""#### Production by County""")
+    col1, col2 = st.columns(2)
     col1.image('./support_files/production_charts/aus_wheat.jpg')
     col2.image('./support_files/production_charts/aus_barley.jpg')
     
