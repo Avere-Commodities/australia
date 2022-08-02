@@ -72,7 +72,7 @@ def create_era5():
     return all_files
     
    
-def main():
+def combine_weather():
     df_era5 = create_era5()
     last_date = df_era5['date'].max()+pd.DateOffset(days=1)
     df_cy = create_agriquest(last_date.strftime("%Y-%m-%d"), f'{current_year+1}-12-31')
@@ -84,4 +84,4 @@ def main():
  
  
 if __name__ == '__main__':
-    main()
+    combine_weather()

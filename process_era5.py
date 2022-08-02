@@ -115,7 +115,7 @@ def process_all(date: str, suffix='australia'):
         pass
 
 
-def main():
+def process_era5():
     mypath = './data_era5/'
     all_files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
     start_date = (datetime.datetime.strptime(all_files[-1].split('_')[0], '%Y-%m-%d')+ datetime.timedelta(days=1)).strftime('%Y-%m-%d')
@@ -125,4 +125,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    process_era5()
