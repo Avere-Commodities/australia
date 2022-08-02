@@ -2,6 +2,7 @@
 import cdsapi
 import urllib3
 import pandas as pd
+from support_files.resources import start_date, today
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -31,9 +32,9 @@ def retrieve_data(date, variable):
 
 
 def main():
-    for date in pd.date_range('1980-01-01', '1984-09-08')[::-1]:
+    for date in pd.date_range(start_date, today):
         try:
-            retrieve_data(date.strftime("%Y-%m-%d"), ['2m_temperature', 'total_precipitation', 'snowfall', 'leaf_area_index_low_vegetation'])
+            retrieve_data(date.strftime("%Y-%m-%d"), ['2m_temperature', 'total_precipitation'])
         except:
             print(date.strftime("%Y-%m-%d"))
             pass

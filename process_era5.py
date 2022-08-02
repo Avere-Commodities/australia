@@ -5,6 +5,7 @@ import xarray as xr
 import geopandas
 from tqdm import tqdm
 from itertools import chain
+from support_files.resources import start_date, today
 from concurrent.futures import ProcessPoolExecutor
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -105,16 +106,16 @@ def process_all(date: str, suffix='australia'):
     try:
         print(date)
         reg_prod = regional_production()
-        table = pd.concat([process_hourly_vars(reg_prod, date, ['leaf_area_index_low_vegetation']), process_moisture_vars(reg_prod, date, ['snowfall'])])
-        # table = pd.concat([process_hourly_vars(reg_prod, date, ['2m_temperature']), process_moisture_vars(reg_prod, date, ['total_precipitation'])])
-        table.to_csv(f'./data_era5/{date}_{suffix}_1.csv', index=None)
+        table = pd.concat([process_hourly_vars(reg_prod, date, ['2m_temperature']), process_moisture_vars(reg_prod, date, ['total_precipitation'])])
+        table.to_csv(f'./data_era5/{date}_{suffix}.csv', index=None)
     except:
         pass
 
 
 def main():
-    with ProcessPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(process_all, date.strftime("%Y-%m-%d")) for date in pd.date_range('1980-01-01', '2022-07-22')[::-1]]
+    with ProcessPoolExecutor(max_workers=4) as executor:
+        for date in pd.date_range(start_date, today)[::-1]:
+            executor.submit(process_all, date.strftime("%Y-%m-%d"))
 
 
 if __name__ == '__main__':
