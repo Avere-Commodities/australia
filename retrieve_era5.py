@@ -2,8 +2,10 @@
 import cdsapi
 import urllib3
 import pandas as pd
-from support_files.resources import start_date, today
-
+from support_files.resources import today
+import datetime
+from os import listdir
+from os.path import isfile, join
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -32,6 +34,9 @@ def retrieve_data(date, variable):
 
 
 def main():
+    mypath = './data_era5/'
+    all_files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    start_date = (datetime.datetime.strptime(all_files[-1].split('_')[0], '%Y-%m-%d')+ datetime.timedelta(days=1)).strftime('%Y-%m-%d')
     for date in pd.date_range(start_date, today):
         try:
             retrieve_data(date.strftime("%Y-%m-%d"), ['2m_temperature', 'total_precipitation'])

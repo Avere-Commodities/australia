@@ -5,7 +5,10 @@ import xarray as xr
 import geopandas
 from tqdm import tqdm
 from itertools import chain
-from support_files.resources import start_date, today
+import datetime
+from os import listdir
+from os.path import isfile, join
+from support_files.resources import today
 from concurrent.futures import ProcessPoolExecutor
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -113,6 +116,9 @@ def process_all(date: str, suffix='australia'):
 
 
 def main():
+    mypath = './data_era5/'
+    all_files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    start_date = (datetime.datetime.strptime(all_files[-1].split('_')[0], '%Y-%m-%d')+ datetime.timedelta(days=1)).strftime('%Y-%m-%d')
     with ProcessPoolExecutor(max_workers=4) as executor:
         for date in pd.date_range(start_date, today)[::-1]:
             executor.submit(process_all, date.strftime("%Y-%m-%d"))
