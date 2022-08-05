@@ -131,7 +131,7 @@ def print_filenames(creds: Credentials, pageSize: int=10) -> None:
 
 def main():
     creds = credentials()
-    print(download_dataframe(creds=creds, filename='australia_weather.csv', parse_dates=['date']))
+    # print(download_dataframe(creds=creds, filename='australia_weather.csv', parse_dates=['date']))
 
 
 if __name__ == '__main__':
