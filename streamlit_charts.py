@@ -144,8 +144,9 @@ def yields_history(yields_df:pd.DataFrame, state: str):
 
 def deviation_charts():
     def plot_charts(df, period: str):
-        fig = px.bar(df.sort_values(by='value'), color_discrete_sequence=px.colors.qualitative.Dark2,
-                labels={'variable':'', '_value':'','state':''})
+        fig = px.bar(df.sort_values(),
+                     color_continuous_scale=['#7a004c', '#b4006e', '#da0c6f', '#f9c0cc', '#dadada', '#bfe5e2', '#00b2ac', '#007c85', '#005b65'],
+                     color_continuous_midpoint=0, labels={'variable':'', '_value':'','state':''})
 
         fig.update_layout(title=f'Total Precip - Last {period} vs Historical Average', hovermode="x unified",
                             font=dict(color='rgb(82, 82, 82)', family='Arial'),
