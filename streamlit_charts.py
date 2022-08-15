@@ -156,6 +156,7 @@ def deviation_charts():
                                             tickfont=dict(size=12)),
                                     yaxis=dict(gridcolor='#F8F8F8', tickfont=dict(size=12), tickformat=".1%"),
                                     plot_bgcolor='white', showlegend=False)
+        fig.update_coloraxes(showscale=False)
         return fig
     
     table = download_dataframe(creds=creds, filename='australia_weather.csv',  parse_dates=['date', 'unified_date'])
