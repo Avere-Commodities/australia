@@ -148,7 +148,7 @@ def deviation_charts():
         df = df.sort_values(by='value')
         fig = px.bar(df, x=df.index,y=df['value'],color='value',
                      color_continuous_scale=['#7a004c', '#b4006e', '#da0c6f', '#f9c0cc', '#dadada', '#bfe5e2', '#00b2ac', '#007c85', '#005b65'],
-                     color_continuous_midpoint=0, labels={'variable':'', 'x':'','y':''})
+                     color_continuous_midpoint=0, labels={'value':'', 'x':'','y':''})
 
         fig.update_layout(title=f'Total Precip - Last {period} vs Historical Average', hovermode="x unified",
                             font=dict(color='rgb(82, 82, 82)', family='Arial'),
