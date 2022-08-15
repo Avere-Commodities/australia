@@ -178,5 +178,5 @@ def deviation_charts():
     return plot_charts(stats_monthly, 30), plot_charts(stats_weekly, 7)
 
 
-# if __name__ == '__main__':
-#     all_historical_estimates()
+if __name__ == '__main__':
+    deviation_charts()
