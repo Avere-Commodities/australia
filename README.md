@@ -11,6 +11,7 @@ Python app creating a weekly weather summary
      $ pip install -r requirements.txt
       ```
  3. Create a Google Drive account & complete the [quickstart steps](https://developers.google.com/drive/api/quickstart/python)
+
  4. Get the GDrive API's token by making the following request:
       ```python
         def credentials() -> Credentials:
